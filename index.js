@@ -13,6 +13,9 @@ const server = http.createServer((req, res) => {
     var path = parseUrl.pathname;
     var trimmedPath = path.replace(/^\/+|\/$/g, '')
 
+    // Get the query string as an object
+    var queryStringObject = parseUrl.query;
+
     //  Get the HTTP method
     var method = req.method.toLowerCase();
 
@@ -20,7 +23,7 @@ const server = http.createServer((req, res) => {
     res.end("hello from the server");
 
     // Log the request path
-    console.log("url : " + trimmedPath + ", method : " + method);
+    console.log("url : " + trimmedPath + ", method : " + method + ", query : ", queryStringObject);
 
 })
 
