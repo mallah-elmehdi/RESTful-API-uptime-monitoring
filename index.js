@@ -5,25 +5,12 @@ const url =  require('url');
 const StringDecoder =  require('string_decoder').StringDecoder;
 const fs = require('fs');
 const config = require('./config');
-
-// Define the handlers
-const handlers = {};
-
-// ping handlers
-handlers.ping = (data, callback) => {
-    // callback http status code, and a payload object
-    callback(200);
-};
-
-// Not found handlers
-handlers.notFound = (data, callback) => {
-    // callback http status code, and a payload object
-    callback(404);
-};
+const handlers = require('./lib/handlers');
 
 // Define a request router
 const router = {
-    "ping" : handlers.ping
+    "ping" : handlers.ping,
+    "users" : handlers.users,
 };
 
 // all server logic for http and https
