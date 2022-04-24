@@ -31,15 +31,61 @@ const server = http.createServer((req, res) => {
     req.on("end", () => {
         buffer += decoder.end();
 
-        // Send the request
-        res.end("hello from the server");
+        // choose the handler this request should go to.
+        var chosenHandler = typeof(router[trimmedPath]) !== "undefined" ? router[trimmedPath] : handler.notFound;
 
-        // Log the request path
-        console.log(buffer);
+        // construct the data object to send to the handler
+        var data = {
+            "trimmedPath": trimmedPath,
+            "queryStringObject": queryStringObject,
+            "method": method,
+            "headers": headers,
+            "payload": buffer
+        };
+
+        // route the request to the handler specified in the router
+        chosenHandler(data, (statusCode, payload) => {
+            // use the statusCode called by the handler, or default to 200
+            statusCode = typeof(statusCode) !== "number" ? statusCode : 200;
+
+            // use the payload called by the handler, or default to empty object
+            payload = typeof(payload) !== "object" ? payload : {};
+
+            // convert the payload to string
+            var payloadString = JSON.stringify(payload);
+
+            // return a response
+            res.writeHead(statusCode);
+            res.end(payloadString);
+
+            // Log the request path
+            console.log(statusCode + " - " + payloadString);
+        })
+
     });
 })
+
+// Define the handlers
+const handlers = {};
+
+// Sample handlers
+handlers.sample = (data, callback) => {
+    // callback http status code, and a payload object
+    callback(406, {"name": "sample handler"});
+};
+
+// Not found handlers
+handlers.notFound = (data, callback) => {
+    // callback http status code, and a payload object
+    callback(404);
+};
+
+// Define a request router
+const router = {
+    "sample" : handlers.sample
+};
 
 // start the server and have it listen on port 300
 server.listen(3000, () => {
     console.log("The server is running...");
-})
+});
