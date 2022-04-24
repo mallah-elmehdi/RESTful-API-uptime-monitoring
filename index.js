@@ -2,6 +2,7 @@
 const http =  require('http');
 const url =  require('url');
 const StringDecoder =  require('string_decoder').StringDecoder;
+const config = require('./config');
 
 // the server should respond to all request with a string
 const server = http.createServer((req, res) => {
@@ -86,7 +87,7 @@ const router = {
     "sample" : handlers.sample
 };
 
-// start the server and have it listen on port 300
-server.listen(3000, () => {
+// start the server
+server.listen(config.port, () => {
     console.log("The server is running...");
 });
