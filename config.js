@@ -9,14 +9,16 @@ var env = {};
 env.staging = {
     "httpPort": 3000,
     "httpsPort": 3001,
-    "envName": "staging"
+    "envName": "staging",
+    "hashingSecret" : "verylongstring"
 }
 
 // production envirement
 env.production = {
     "httpPort": 5000,
     "httpsPort": 5001,
-    "envName": "production"
+    "envName": "production",
+    "hashingSecret" : "verylongstring"
 }
 
 // determine which end was passed as a command-line argument
