@@ -89,5 +89,5 @@ const router = {
 
 // start the server
 server.listen(config.port, () => {
-    console.log("The server is running...");
+    console.log("The server is running on port " + config.port + " on mode " + config.envName);
 });

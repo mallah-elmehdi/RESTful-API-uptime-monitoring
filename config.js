@@ -18,7 +18,7 @@ env.production = {
 }
 
 // determine which end was passed as a command-line argument
-var currentEnv = typeof(process.env.NODE_ENV) === "staging" ? process.env.NODE_ENV.toLowerCase() : "";
+var currentEnv = typeof(process.env.NODE_ENV) === "string" ? process.env.NODE_ENV.toLowerCase() : "";
 
 // Check that the current env is one of the above if not set it to default
 var envToExport = typeof(env[currentEnv]) === "object" ? env[currentEnv] : env.staging;
