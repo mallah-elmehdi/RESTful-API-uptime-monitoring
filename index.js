@@ -1,11 +1,32 @@
 // Dependencies
 const http =  require('http');
+const https =  require('https');
 const url =  require('url');
 const StringDecoder =  require('string_decoder').StringDecoder;
 const config = require('./config');
 
-// the server should respond to all request with a string
-const server = http.createServer((req, res) => {
+// Define the handlers
+const handlers = {};
+
+// Sample handlers
+handlers.sample = (data, callback) => {
+    // callback http status code, and a payload object
+    callback(406, {"name": "sample handler"});
+};
+
+// Not found handlers
+handlers.notFound = (data, callback) => {
+    // callback http status code, and a payload object
+    callback(404);
+};
+
+// Define a request router
+const router = {
+    "sample" : handlers.sample
+};
+
+// all server logic for http and https
+const unifiedServer = (req, res) => {
 
     // Get the URL nad parse it
     var parseUrl = url.parse(req.url, true);
@@ -65,29 +86,27 @@ const server = http.createServer((req, res) => {
         })
 
     });
+}
+
+// init the http server
+const httpServer = http.createServer((req, res) => {
+    unifiedServer(req, res);
 })
 
-// Define the handlers
-const handlers = {};
+// start the httpServer
+httpServer.listen(config.httpPort, () => {
+    console.log("The server is running on port " + config.httpPort + " on mode " + config.envName);
+});
 
-// Sample handlers
-handlers.sample = (data, callback) => {
-    // callback http status code, and a payload object
-    callback(406, {"name": "sample handler"});
+// init the https server
+const httpsServerOption = {
+    
 };
+const httpsServer = https.createServer(httpsServerOption ,(req, res) => {
+    unifiedServer(req, res);
+});
 
-// Not found handlers
-handlers.notFound = (data, callback) => {
-    // callback http status code, and a payload object
-    callback(404);
-};
-
-// Define a request router
-const router = {
-    "sample" : handlers.sample
-};
-
-// start the server
-server.listen(config.port, () => {
-    console.log("The server is running on port " + config.port + " on mode " + config.envName);
+// start the httpsServer
+httpsServer.listen(config.httpsPort, () => {
+    console.log("The server is running on port " + config.httpsPort + " on mode " + config.envName);
 });
