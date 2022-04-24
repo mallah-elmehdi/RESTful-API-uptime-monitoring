@@ -3,15 +3,16 @@ const http =  require('http');
 const https =  require('https');
 const url =  require('url');
 const StringDecoder =  require('string_decoder').StringDecoder;
+const fs = require('fs');
 const config = require('./config');
 
 // Define the handlers
 const handlers = {};
 
-// Sample handlers
-handlers.sample = (data, callback) => {
+// ping handlers
+handlers.ping = (data, callback) => {
     // callback http status code, and a payload object
-    callback(406, {"name": "sample handler"});
+    callback(200);
 };
 
 // Not found handlers
@@ -22,7 +23,7 @@ handlers.notFound = (data, callback) => {
 
 // Define a request router
 const router = {
-    "sample" : handlers.sample
+    "ping" : handlers.ping
 };
 
 // all server logic for http and https
@@ -100,7 +101,8 @@ httpServer.listen(config.httpPort, () => {
 
 // init the https server
 const httpsServerOption = {
-    
+    "key": fs.readFileSync("./https/key.pem"),
+    "cert": fs.readFileSync("./https/cert.pem"),
 };
 const httpsServer = https.createServer(httpsServerOption ,(req, res) => {
     unifiedServer(req, res);
