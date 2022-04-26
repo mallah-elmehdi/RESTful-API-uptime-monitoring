@@ -45,7 +45,6 @@ const unifiedServer = (req, res) => {
     });
     req.on("end", () => {
         buffer += decoder.end();
-
         // choose the handler this request should go to.
         var chosenHandler = typeof(router[trimmedPath]) !== "undefined" ? router[trimmedPath] : handlers.notFound;
 
@@ -69,16 +68,30 @@ const unifiedServer = (req, res) => {
             // convert the payload to string
             var payloadString = JSON.stringify(payload);
 
-            // check if the path is "/" then send the (home page) html page
-            // if ()
-            console.log(path);
-            // return a response
-            res.setHeader("Content-type", "application/json");
-            res.writeHead(statusCode);
-            res.end(payloadString);
+            // check if the path is "/" then send the (home page) html page else return a json
+            if (path === "/") {
 
-            // Log the request path
-            console.log(statusCode + " - " + payloadString);
+                // read the html file and send it to the user
+                fs.readFile('./static/index.html', (err, file) => {
+                    if (!err) {
+                        res.writeHeader(200, {"Content-type": "text/html"});
+                        res.write(file);
+                        res.end();
+                    } else {
+                        res.end({"Error": err});
+                        console.log(err);
+                    }
+                })
+            } else {
+
+                // return a response
+                res.setHeader("Content-type", "application/json");
+                res.writeHead(statusCode);
+                res.end(payloadString);
+
+                // Log the request path
+                console.log(statusCode + " - " + payloadString);
+            }
         })
 
     });
