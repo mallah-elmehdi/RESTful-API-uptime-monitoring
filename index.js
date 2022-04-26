@@ -1,3 +1,7 @@
+/*
+The entrypoint file for this project
+*/
+
 // Dependencies
 const http =  require('http');
 const https =  require('https');
