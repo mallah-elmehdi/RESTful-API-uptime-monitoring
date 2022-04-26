@@ -55,7 +55,7 @@ const unifiedServer = (req, res) => {
             "queryStringObject": queryStringObject,
             "method": method,
             "headers": headers,
-            "payload": helpers.parseJsonToObject(buffer)
+            // "payload": helpers.parseJsonToObject(buffer)
         };
 
         // route the request to the handler specified in the router
@@ -69,6 +69,9 @@ const unifiedServer = (req, res) => {
             // convert the payload to string
             var payloadString = JSON.stringify(payload);
 
+            // check if the path is "/" then send the (home page) html page
+            // if ()
+            console.log(path);
             // return a response
             res.setHeader("Content-type", "application/json");
             res.writeHead(statusCode);
